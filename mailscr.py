@@ -79,9 +79,12 @@ async def process_mail_scr_queue(user_client_mail, bot):
         
         await progress_message.delete()
 
-        with open(f'{channel_identifier}_combos.txt', 'w') as file:
+        with open(f'{channel_identifier}_combos.txt', 'w', encoding='utf-8') as file:
             for combo in filtered_messages:
-                file.write(f"{combo}\n")
+                try:
+                    file.write(f"{combo}\n")
+                except UnicodeEncodeError:
+                    continue
 
         with open(f'{channel_identifier}_combos.txt', 'rb') as file:
             output_message = f"""<b>Mail Scrapped Successful ✅
