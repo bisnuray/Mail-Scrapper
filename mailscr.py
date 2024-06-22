@@ -87,12 +87,14 @@ async def process_mail_scr_queue(user_client_mail, bot):
                     continue
 
         with open(f'{channel_identifier}_combos.txt', 'rb') as file:
+            user_full_name = f"{message.from_user.first_name} {message.from_user.last_name or ''}".strip()
+            user_link = f"<a href='tg://user?id={message.from_user.id}'>{user_full_name}</a>"
             output_message = f"""<b>Mail Scrapped Successful ✅
 ━━━━━━━━━━━━━━━━━━
 Source: <code>{channel_identifier}</code>
 Mail Amount: {len(filtered_messages)}
 ━━━━━━━━━━━━━━━━━━
-Mail Scrapped By: <a href='https://t.me/itsSmartDev'>Smart Dev</a></b>"""
+Mail Scrapped By: {user_link}</b>"""
             await bot.send_document(message.chat.id, InputFile(file), caption=output_message, parse_mode=ParseMode.HTML)
 
         os.remove(f'{channel_identifier}_combos.txt')
@@ -103,7 +105,7 @@ Mail Scrapped By: <a href='https://t.me/itsSmartDev'>Smart Dev</a></b>"""
 async def collect_handler(message: types.Message):
     greni = message.text.split()
     if len(greni) < 3:
-        await message.reply("<b>❌ Please provide a channel with amount</b>", parse_mode=ParseMode.HTML)
+        await message.answer("<b>❌ Please provide a channel with amount</b>", parse_mode=ParseMode.HTML)
         return
 
     channel_identifier = greni[1]
